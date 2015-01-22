@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test</title>
+  <script src="calc.js"></script>
+  <script>
+  function showResult(s){
+    document.write("<p>" + s + " = <b>" + calc(s) + "</b></p>")
+  }
+
+  showResult("(1 + 2^4) * 5");
+  showResult("-2 * 4.3");
+  showResult("sqrt(4) * log2(8)");
+  showResult("exp(2) + log2(2)")
+  showResult("logN(12^5, 12)");
+  showResult("floor(4.6) * ceil(4.2)");
+  showResult("max(3^2, 2^3) * min(floor(4.5), ceil(4.5))");
+  showResult("sqrt(2) + cbrt(2)");
+  showResult("sq(sq(sq(3)))");
+  showResult("sin(PI) + cos(TWO_PI)");
+  showResult("atan(1) + acos(1)");
+  </script>
+</head>
+<body>
+  
+</body>
+</html>

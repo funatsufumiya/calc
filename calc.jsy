@@ -1,0 +1,188 @@
+%{
+
+(function(G){
+
+var retVal;
+
+%}
+
+%token NUM
+%token ID
+
+%left '+' '-'
+%left '*' '/'
+%left '^'
+
+%start line
+
+%%
+
+line
+  : expr { retVal = $1; }
+  ;
+
+expr
+  : expr '+' expr { $$ = $1 + $3; }
+  | expr '-' expr { $$ = $1 - $3; }
+  | expr '*' expr { $$ = $1 * $3; }
+  | expr '/' expr { $$ = $1 / $3; }
+  | expr '^' expr { $$ = Math.pow($1,$3); }
+  | funcall { $$ = $1; }
+  | '(' expr ')' { $$ = $2; }
+  | '-' expr { $$ = -($2); }
+  | '+' expr { $$ = +($2); }
+  | NUM { $$ = $1; }
+  | ID { if(isConstExists($1)){ $$ = getConst($1); }else{ yyerror("Constant '"+$1+"' does not exists"); retVal = NaN; return; }; }
+  ;
+
+funcall
+  : ID '(' args ')' { if(isFuncExists($1)){ $$ = callDefinedFunc($1,$3); }else{ yyerror("Function '"+$1+"' does not exists"); retVal = NaN; return; };  }
+  ;
+
+args
+  : /* empty */ { $$ = []; }
+  | args ',' expr { $$ = $1.concat([$3]); }
+  | expr { $$ = [$1]; }
+  ;
+
+%%
+
+var pos = 0;
+var buffer;
+var numRegex = /^(?:0|[1-9][0-9]*|0[.]\d*|[1-9][0-9]*[.]\d*|[.]\d*)$/;
+var idRegex = /^[a-zA-Z\d_]+$/;
+
+var definedConsts = {
+  PI: Math.PI,
+  TWO_PI: 2*Math.PI,
+  HALF_PI: 2*Math.PI,
+  E: Math.E,
+  LN2: Math.LN2,
+  LN10: Math.LN10,
+  LOG2E: Math.LOG2E,
+  LOG10E: Math.LOG10E
+};
+
+var definedFuncs = {
+  abs: function(n){ return Math.abs(n); },
+  sin: function(n){ return Math.sin(n); },
+  cos: function(n){ return Math.cos(n); },
+  tan: function(n){ return Math.tan(n); },
+  asin: function(n){ return Math.asin(n); },
+  acos: function(n){ return Math.acos(n); },
+  atan: function(n){ return Math.atan(n); },
+  atan2: function(n){ return Math.atan2(n); },
+  log: function(n){ return Math.log(n); },
+  max: function(){ return Math.max.apply(null, arguments); },
+  min: function(){ return Math.min.apply(null, arguments); },
+  sq: function(n){ return n*n; },
+  sqrt: function(n){ return Math.sqrt(n); },
+  cbrt: function(n){ return Math.pow(n, 1/3); },
+  pow: function(a,b){ return Math.pow(a,b); },
+  floor: function(n){ return Math.floor(n); },
+  ceil: function(n){ return Math.ceil(n); },
+  round: function(n){ return Math.round(n); },
+  random: function(){ return Math.random(); },
+  exp: function(n){ return Math.exp(n); },
+  log: function(n){ return Math.log(n); },
+  log2: function(n){ return Math.log(n)/Math.log(2); },
+  log10: function(n){ return Math.log(n)/Math.log(10); },
+  logN: function(n,base){ return Math.log(n)/Math.log(base); },
+};
+
+function yyerror(msg){
+  console.error("[ERROR] "+ msg);
+}
+
+function callDefinedFunc(name, args){
+  return definedFuncs[name].apply(null, args);
+}
+
+function isFuncExists(name){
+  return (typeof definedFuncs[name] != 'undefined');
+}
+
+function getConst(name){
+  return definedConsts[name];
+}
+
+function isConstExists(name){
+  return (typeof definedConsts[name] != 'undefined');
+}
+
+function isNumber(s){
+  return numRegex.test(s)
+}
+
+function isIdentifier(s){
+  return idRegex.test(s);
+}
+
+function isBlank(c){
+  return (c == ' ' || c == '\n' || c == '\t');
+}
+
+function yylex(){
+  if(pos == buffer.length){
+    return 0;
+  }
+
+  var c = buffer[pos];
+
+  if(isBlank(c)){
+    while(true){
+      if(pos != buffer.length-1 && isBlank(buffer[pos+1])){
+        ++pos;
+        continue; // skip
+      }else{
+        ++pos;
+        break; // skip
+      }
+    }
+
+    c = buffer[pos];
+  }
+
+  if(pos == buffer.length){
+    return 0;
+  }
+
+  if(isNumber(c)){
+    var numStr = c;
+    while(true){
+      if(pos != buffer.length-1 && isNumber(buffer[pos+1])){
+        numStr += buffer[pos+1];
+        ++pos;
+      }else{
+        yylval = +(numStr);
+        ++pos;
+        return NUM;
+      }
+    }
+  }else if(isIdentifier(c)){
+    var idStr = c;
+    while(true){
+      if(pos != buffer.length-1 && isIdentifier(buffer[pos+1])){
+        idStr += buffer[pos+1];
+        ++pos;
+      }else{
+        yylval = idStr;
+        ++pos;
+        return ID;
+      }
+    }
+  }else{
+    return buffer.charCodeAt(pos++);
+  }
+}
+
+function calc(s){
+  pos = 0
+  buffer = s;
+  yyparse();
+  return retVal;
+}
+
+G.calc = calc;
+
+})(this); // Global
