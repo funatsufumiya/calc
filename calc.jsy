@@ -1,3 +1,5 @@
+/* kmyacc file (javascript) */
+
 %{
 
 (function(G){
