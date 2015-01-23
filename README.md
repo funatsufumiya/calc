@@ -2,13 +2,6 @@
 
 This is a practice for porting from javascript to c.
 
-## Differences between the javascript version and the C version
-
-- `calc.jsy` has 190 lines, but `calc.y` has 401 lines (> 2x long).
-- The javaScript version is simple and easy, but the c version is difficult to understand.
-- The c version is blazingly fast when compared to the js.
-- The javaScript has the garbage collector and are the higher level language, but the c isn't so. So the c must be controlled resources manually. That's why.
-
 ## Usage
 
 #### JavaScript
@@ -58,3 +51,14 @@ type `rake all` or `rake js`, `rake c`
 - kmyacc [(official site in japanese)](http://www005.upp.so-net.ne.jp/kmori/kmyacc/)
 - POSIX regex.h
 - rake
+
+## Differences between the javascript version and the C version
+
+- `calc.jsy` has 190 lines, but `calc.y` has 401 lines (> 2x long).
+- The javaScript version is simple and easy, but the c version is difficult to understand.
+- The c version is blazingly fast when compared to the js.
+- The javaScript has the garbage collector and are the higher level language, but the c isn't so. So the c must be controlled resources manually. That's why.
+
+## License
+
+You can use, copy, share and modify with any conditions.
