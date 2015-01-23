@@ -1,4 +1,4 @@
-# Calc command
+# Calc command for C and JavaScript
 
 This is a practice for porting from javascript to c.
 
