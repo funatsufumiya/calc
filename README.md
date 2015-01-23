@@ -61,4 +61,4 @@ type `rake all` or `rake js`, `rake c`
 
 ## License
 
-You can use, copy, share and modify with any conditions.
+You can use, copy, share and modify without any conditions.
