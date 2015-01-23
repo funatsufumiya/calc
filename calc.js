@@ -349,7 +349,7 @@ var definedFuncs = {
   asin: function(n){ return Math.asin(n); },
   acos: function(n){ return Math.acos(n); },
   atan: function(n){ return Math.atan(n); },
-  atan2: function(n){ return Math.atan2(n); },
+  atan2: function(a,b){ return Math.atan2(a,b); },
   log: function(n){ return Math.log(n); },
   max: function(){ return Math.max.apply(null, arguments); },
   min: function(){ return Math.min.apply(null, arguments); },
@@ -428,7 +428,7 @@ function yylex(){
   if(isNumber(c)){
     var numStr = c;
     while(true){
-      if(pos != buffer.length-1 && isNumber(buffer[pos+1])){
+      if(pos != buffer.length-1 && isNumber(numStr + buffer[pos+1])){
         numStr += buffer[pos+1];
         ++pos;
       }else{
@@ -440,7 +440,7 @@ function yylex(){
   }else if(isIdentifier(c)){
     var idStr = c;
     while(true){
-      if(pos != buffer.length-1 && isIdentifier(buffer[pos+1])){
+      if(pos != buffer.length-1 && isIdentifier(idStr + buffer[pos+1])){
         idStr += buffer[pos+1];
         ++pos;
       }else{
