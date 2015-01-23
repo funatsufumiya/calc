@@ -24,7 +24,7 @@ calc("atan(1) + acos(1)"); // 0.7853981633974483
 
 #### C
 
-- You can compile with `gcc -O calc.c -o calc` quickly
+- You can compile with `gcc -O3 calc.c -o calc` quickly
 - Usage is like `calc [expression]`
 - Type just `calc` to show help
 
